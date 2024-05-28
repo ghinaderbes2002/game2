@@ -1,15 +1,55 @@
 import 'package:flutter/material.dart';
 
-class CustomTextTitleAuth extends StatelessWidget {
+class ReusableText extends StatelessWidget {
   final String text;
-  const CustomTextTitleAuth({Key? key, required this.text}) : super(key: key);
+  final Color? color;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final FontStyle? fontStyle;
+  final TextAlign? textAlign;
+  final TextDirection? textDirection;
+  final int? maxLines;
+  final TextOverflow? overflow;
+  final TextDecoration? decoration;
+  final double? letterSpacing;
+  final double? wordSpacing;
+  final double? height;
+
+  const ReusableText({
+    required this.text,
+    this.color,
+    this.fontSize,
+    this.fontWeight,
+    this.fontStyle,
+    this.textAlign,
+    this.textDirection,
+    this.maxLines,
+    this.overflow,
+    this.decoration,
+    this.letterSpacing,
+    this.wordSpacing,
+    this.height,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
-      textAlign: TextAlign.center,
-      style: Theme.of(context).textTheme.displayMedium,
+      style: TextStyle(
+        color: color,
+        fontSize: fontSize,
+        fontWeight: fontWeight,
+        fontStyle: fontStyle,
+        decoration: decoration,
+        letterSpacing: letterSpacing,
+        wordSpacing: wordSpacing,
+        height: height,
+      ),
+      textAlign: textAlign,
+      textDirection: textDirection,
+      maxLines: maxLines,
+      overflow: overflow,
     );
   }
 }

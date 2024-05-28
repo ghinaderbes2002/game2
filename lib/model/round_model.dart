@@ -3,7 +3,7 @@ import 'package:game2/model/word_model.dart';
 class RoundModel {
   final int id;
   final String name;
-  final List<WordModel> words;
+  final List<dynamic> words;
 
   RoundModel({
     required this.id,
@@ -12,7 +12,7 @@ class RoundModel {
   });
 
   factory RoundModel.fromJson(Map<String, dynamic> json) {
-    List<dynamic> wordsList = json['round'] ?? [];
+    List<dynamic> wordsList = json['words'] ?? [];
     List<WordModel> words =
         wordsList.map((wordJson) => WordModel.fromJson(wordJson)).toList();
 
@@ -22,4 +22,27 @@ class RoundModel {
       words: words,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'words': words.map((word) => word.toJson()).toList(),
+    };
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (runtimeType != other.runtimeType) return false;
+    final RoundModel otherRound = other as RoundModel;
+    return id == otherRound.id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+}
+
+bool isRoundModelInList(List<RoundModel> openRounds, RoundModel round) {
+  return openRounds.contains(round);
 }

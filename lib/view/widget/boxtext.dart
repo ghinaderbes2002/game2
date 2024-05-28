@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game2/core/constants/values/app_colors.dart';
 import 'package:tap_to_expand/tap_to_expand.dart';
 
 class BoxText extends StatelessWidget {
@@ -18,28 +19,28 @@ class BoxText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: TapToExpand(
+        backgroundcolor: AppColors.primaryColor,
         content: Column(
           children: <Widget>[
-            // for (var i = 0; i < 20; i++)
             Text(
-              text2!,
-              style: TextStyle(color: Colors.black, fontSize: 20),
+              text2 ?? "",
+              style: const TextStyle(color: Colors.white, fontSize: 20),
             ),
             Text(
-              text3!,
-              style: TextStyle(color: Colors.black, fontSize: 20),
+              text3 ?? "",
+              style: const TextStyle(color: Colors.white, fontSize: 20),
             ),
           ],
         ),
         title: Text(
           text,
-          style: TextStyle(
-            color: Colors.black,
+          style: const TextStyle(
+            color: Colors.white,
             fontSize: 20,
           ),
         ),
         closedHeight: 70,
-        openedHeight: 200,
+        openedHeight: 150,
       ),
     );
   }

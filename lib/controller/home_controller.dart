@@ -5,43 +5,67 @@ import 'package:game2/model/user_model.dart';
 import 'package:game2/view/screen/gamescreen.dart';
 import 'package:get/get.dart';
 
-abstract class HomeController extends MainControllerimp {
+import '../core/classes/api_client.dart';
+import '../core/constants/connection.dart';
+
+abstract class HomeController extends MainControllerImp {
   startGame();
   resumeGame();
-  fatchPlayerOfTheWeek();
+
+  fetchPlayerOfTheWeek();
 }
 
-class HomeControllerimp extends HomeController {
-  late UserModel playerOfTheWeek;
+class HomeControllerImp extends HomeController {
+  UserModel playerOfTheWeek =
+      UserModel(id: 0, name: "", password: "", logs: []);
   int weekHighScore = 0;
 
   @override
   startGame() {
     int? currentIndex = myServices.sharedPreferences.getInt('nextRoundIndex');
-    selecteRound = rounds[currentIndex ?? 0];
-    Get.to(() => const GameScreen());
+    myServices.sharedPreferences.setString(
+        "selectedRound", jsonEncode(rounds[currentIndex ?? 0].toJson()));
+    Get.to(() => GameScreen());
   }
 
   @override
   resumeGame() {
-    Map stats = json.decode(myServices.sharedPreferences.getString("stats")!);
+    Map stats =
+        json.decode(myServices.sharedPreferences.getString("pausedRound")!);
+
     rounds.forEach((round) {
       if (round.id == stats['roundId']) {
-        selecteRound = round;
+        selectedRound = round;
+        myServices.sharedPreferences
+            .setString("selectedRound", jsonEncode(round.toJson()));
       }
     });
-    score = stats['score'];
-    mistake = stats['mistake'];
-    seconds = stats['seconds'];
-    Get.to(() => const GameScreen());
+    Get.to(() => GameScreen());
   }
 
   @override
-  fatchPlayerOfTheWeek() {}
+  Future<List> fetchPlayerOfTheWeek() async {
+    ApiClient apiClient = ApiClient();
+    try {
+      ApiResponse<dynamic> getResponse = await apiClient.getData(
+        url: '$serverLink/getPlayerOfWeek',
+      );
+      if (getResponse.data['playerWithHighestScore'] != null) {
+        playerOfTheWeek =
+            UserModel.forTopPlayer(getResponse.data['playerWithHighestScore']);
+      }
+      weekHighScore = getResponse.data['highestScore'];
+      return [playerOfTheWeek, weekHighScore];
+    } catch (error) {
+      print('1 Error while making POST request: $error');
+      return [];
+    }
+  }
 
   @override
-  void onInit() {
-    fatchPlayerOfTheWeek();
+  Future<void> onInit() async {
     super.onInit();
+    fetchPlayerOfTheWeek();
+    rounds = await getRounds();
   }
 }

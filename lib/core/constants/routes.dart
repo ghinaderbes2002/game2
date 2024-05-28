@@ -5,5 +5,6 @@ class AppRoute {
   static const String addround = "/addround";
   static const String exitround = "/exitround";
   static const String deleteround = "/deleteround";
+  static const String manageRounds = "/manageRounds";
   static const String home = "/home";
 }

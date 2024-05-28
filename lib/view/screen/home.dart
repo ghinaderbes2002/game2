@@ -1,32 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:game2/controller/home_controller.dart';
 import 'package:game2/view/widget/auth/custombuttonauth.dart';
+import 'package:game2/view/widget/auth/customtextbodyauth.dart';
 import 'package:game2/view/widget/boxtext.dart';
 import 'package:get/get.dart';
-import 'package:game2/view/widget/auth/customtextbodyauth.dart';
 
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+  const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<HomeControllerimp>(
-        init: HomeControllerimp(),
-        builder: (controller) => Container(
-            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+    return GetBuilder<HomeControllerImp>(
+      init: HomeControllerImp()
+        ..fetchUser()
+        ..fetchRounds()
+        ..fetchPlayerOfTheWeek(),
+      builder: (controller) => Container(
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
             child: ListView(
               children: [
-                CustomTextBodyAuth(
-                  text: controller.playerOfTheWeek.name,
-                ),
-                const SizedBox(
+            const SizedBox(height: 100),
+            const CustomTextBodyAuth(
+              text: "Player of the week",
+            ),
+            const SizedBox(
                   height: 15,
                 ),
-                const BoxText(
-                  text: 'User name : ',
-                  text2: 'Score :',
-                ),
-                const SizedBox(
+            FutureBuilder<List>(
+              future: controller.fetchPlayerOfTheWeek(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return BoxText(
+                    text: 'User name : ${snapshot.data![0].name}',
+                    text2: 'Score : ${snapshot.data![1]}',
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(child: Text("${snapshot.error}"));
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
+            const SizedBox(
                   height: 30,
                 ),
                 CustomButtonAuth(
@@ -45,6 +60,8 @@ class Home extends StatelessWidget {
                   },
                 ),
               ],
-            )));
+        ),
+      ),
+    );
   }
 }

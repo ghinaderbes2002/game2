@@ -17,15 +17,20 @@ class ApiClient {
     Map<String, dynamic>? headers,
   }) async {
     try {
-      Response<dynamic> response = await _dio.post(
-        url,
-        data: data,
-        queryParameters: queryParameters,
-        options: Options(headers: headers),
-      );
+      print("Attempting to post data to $url");
+      var response = await _dio.post(url,
+          data: data,
+          queryParameters: queryParameters,
+          options: Options(headers: headers));
+      print("Data posted successfully with status code ${response.statusCode}");
       return ApiResponse(statusCode: response.statusCode!, data: response.data);
-    } catch (error) {
-      throw Exception('Failed to post data: $error');
+    } catch (error, stacktrace) {
+      print("Failed to post data: $error");
+      print("Stacktrace: $stacktrace");
+      throw DioError(
+        requestOptions: RequestOptions(path: url),
+        error: 'Failed to post data: $error',
+      );
     }
   }
 
@@ -35,14 +40,18 @@ class ApiClient {
     Map<String, dynamic>? headers,
   }) async {
     try {
-      Response<dynamic> response = await _dio.get(
-        url,
-        queryParameters: queryParameters,
-        options: Options(headers: headers),
-      );
+      print("Attempting to post data to $url");
+      var response = await _dio.get(url,
+          queryParameters: queryParameters, options: Options(headers: headers));
+      print("Data posted successfully with status code ${response.statusCode}");
       return ApiResponse(statusCode: response.statusCode!, data: response.data);
-    } catch (error) {
-      throw Exception('Failed to get data: $error');
+    } catch (error, stacktrace) {
+      print("Failed to post data: $error");
+      print("Stacktrace: $stacktrace");
+      throw DioError(
+        requestOptions: RequestOptions(path: url),
+        error: 'Failed to post data: $error',
+      );
     }
   }
 
@@ -52,14 +61,48 @@ class ApiClient {
     Map<String, dynamic>? headers,
   }) async {
     try {
+      print("Attempting to delete data at $url");
       Response<dynamic> response = await _dio.delete(
         url,
         queryParameters: queryParameters,
         options: Options(headers: headers),
       );
+      print(
+          "Data deleted successfully with status code ${response.statusCode}");
       return ApiResponse(statusCode: response.statusCode!, data: response.data);
-    } catch (error) {
-      throw Exception('Failed to delete data: $error');
+    } catch (error, stacktrace) {
+      print("Failed to delete data: $error");
+      print("Stacktrace: $stacktrace");
+      throw DioError(
+        requestOptions: RequestOptions(path: url),
+        error: 'Failed to delete data: $error',
+      );
+    }
+  }
+
+  Future<ApiResponse<dynamic>> putData({
+    required String url,
+    required dynamic data,
+    Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? headers,
+  }) async {
+    try {
+      print("Attempting to put data to $url");
+      Response<dynamic> response = await _dio.put(
+        url,
+        data: data,
+        queryParameters: queryParameters,
+        options: Options(headers: headers),
+      );
+      print("Data put successfully with status code ${response.statusCode}");
+      return ApiResponse(statusCode: response.statusCode!, data: response.data);
+    } catch (error, stacktrace) {
+      print("Failed to put data: $error");
+      print("Stacktrace: $stacktrace");
+      throw DioError(
+        requestOptions: RequestOptions(path: url),
+        error: 'Failed to put data: $error',
+      );
     }
   }
 }
@@ -67,22 +110,3 @@ class ApiClient {
 
 
 
-
-
-// -----------------     USAGE     ----------------- // 
-
-/*
-  ApiClient apiClient = ApiClient();
-  try {
-    ApiResponse<dynamic> postResponse = await apiClient.postData(
-      url: 'https://example.com/api/post',
-      data: {'key': 'value'},
-      // queryParameters: {'param1': 'value1', 'param2': 'value2'},
-      // headers: {'Authorization': 'Bearer YOUR_ACCESS_TOKEN'},
-    );
-    print('POST Response Status Code: ${postResponse.statusCode}');
-    print('POST Response Data: ${postResponse.data}');
-  } catch (error) {
-    print('Error while making POST request: $error');
-  }
-*/

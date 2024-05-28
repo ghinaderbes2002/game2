@@ -1,33 +1,35 @@
 import 'package:game2/controller/main_controller.dart';
+import 'package:game2/view/screen/auth/screens/login_screen.dart';
 import 'package:get/get.dart';
-import '../view/screen/auth/login.dart';
 
-abstract class ProfileController extends MainControllerimp {
-  signout();
+abstract class ProfileController extends MainControllerImp {
+  signOut();
   calcHighScore();
 }
 
-class ProfileControllerimp extends ProfileController {
-  String name = "";
-  int highScorce = 0;
+class ProfileControllerImp extends ProfileController {
+  int highScore = 0;
 
   @override
-  signout() {
+  signOut() {
     myServices.sharedPreferences.clear();
-    Get.off(() => const Login());
+    Get.off(() => const LoginPage());
   }
 
   @override
   calcHighScore() {
-    List<int> scorces = userModel.logs.map((log) => log.score).toList();
-    highScorce =
-        scorces.reduce((value, element) => value > element ? value : element);
+    List<int> scores = userModel.logs.map((log) => log.score).toList();
+    highScore = scores.isNotEmpty
+        ? scores.reduce((value, element) => value > element ? value : element)
+        : 0;
+    print(
+        "scores are   : ${userModel.name}    \n\n\n  and highscore is : ${highScore} ");
   }
 
   @override
-  void onInit() {
-    calcHighScore();
-    name = userModel.name;
+  Future<void> onInit() async {
     super.onInit();
+    fetchUser();
+    calcHighScore();
   }
 }

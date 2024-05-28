@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:game2/core/classes/api_client.dart';
 import 'package:game2/core/constants/connection.dart';
+import 'package:game2/view/screen/rounds_manage/roundsmanage.dart';
 import 'package:get/get.dart';
 
 abstract class AddRoundController extends GetxController {
@@ -17,10 +18,12 @@ class AddRoundControllerimp extends AddRoundController {
     try {
       ApiResponse<dynamic> postResponse = await apiClient.postData(
         url: '$serverLink/createround',
-        data: {"name": roundname.text.trim(), "wodrs": words.text.split(',')},
+        data: {"name": roundname.text.trim(), "words": words.text.split(',')},
       );
       print('POST Response Data: ${postResponse.data}');
-      if (postResponse.statusCode == 200 || postResponse.statusCode == 201) {}
+      if (postResponse.statusCode == 200 || postResponse.statusCode == 201) {
+        Get.off(() => const RoundsManage());
+      }
     } catch (error) {
       print(error);
     }

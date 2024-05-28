@@ -11,7 +11,8 @@ class CustomTextBodyAuth extends StatelessWidget {
       child: Text(
         text,
         textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.displayMedium,
+        style: Theme.of(context).textTheme.displaySmall!.copyWith(
+            color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold),
       ),
     );
   }

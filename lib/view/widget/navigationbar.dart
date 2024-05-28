@@ -6,6 +6,7 @@ class PageFooter extends StatelessWidget {
   final IconData iconData;
   final IconData iconData2;
   final IconData iconData3;
+  final int pageIndex;
   final dynamic Function(int)? onTap;
   const PageFooter({
     Key? key,
@@ -14,6 +15,7 @@ class PageFooter extends StatelessWidget {
     required this.iconData2,
     required this.iconData3,
     this.onTap,
+    required this.pageIndex,
   }) : super(key: key);
 
   @override
@@ -21,18 +23,23 @@ class PageFooter extends StatelessWidget {
     return SizedBox(
       height: 123,
       child: DotNavigationBar(
-        backgroundColor: Colors.white,
+        currentIndex: pageIndex,
+        backgroundColor: Colors.black45,
         onTap: onTap,
+        enableFloatingNavBar: true,
         items: [
           DotNavigationBarItem(
             icon: Icon(iconData),
+            unselectedColor: Colors.white,
             selectedColor: color,
           ),
           DotNavigationBarItem(
+            unselectedColor: Colors.white,
             icon: Icon(iconData2),
             selectedColor: color,
           ),
           DotNavigationBarItem(
+            unselectedColor: Colors.white,
             icon: Icon(iconData3),
             selectedColor: color,
           ),

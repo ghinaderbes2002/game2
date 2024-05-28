@@ -14,24 +14,41 @@ class UserModel {
   });
 
   factory UserModel.fromServer(Map<String, dynamic> json) {
-    List<dynamic> logsList = json['user']['logs'] ?? [];
-    List<LogModel> logs =
-        logsList.map((logJson) => LogModel.fromJson(logJson)).toList();
+    // List<dynamic> logsList = json['user']['logs'];
+    // List<LogModel> logs =
+    //     logsList.map((logJson) => LogModel.fromJson(logJson)).toList();
+
+    var logsFromJson = json['user']['logs'] as List;
+    List<LogModel> logList =
+        logsFromJson.map((log) => LogModel.fromJson(log)).toList();
 
     return UserModel(
       id: json['user']['id'],
       name: json['user']['name'],
       password: json['user']['password'],
-      logs: logs,
+      logs: logList,
     );
   }
 
   factory UserModel.fromCache(Map<String, dynamic> json) {
+    var logsFromJson = json['logs'] as List;
+    List<LogModel> logList =
+        logsFromJson.map((log) => LogModel.fromJson(log)).toList();
+
     return UserModel(
       id: json['id'],
       name: json['name'],
       password: json['password'],
-      logs: json['logs'],
+      logs: logList,
+    );
+  }
+
+  factory UserModel.forTopPlayer(Map<String, dynamic> json) {
+    return UserModel(
+      id: json['id'],
+      name: json['name'],
+      password: json['password'],
+      logs: [],
     );
   }
 
@@ -40,7 +57,20 @@ class UserModel {
       'id': id,
       'name': name,
       'password': password,
-      'logs': logs,
+      'logs': logs.map((log) => log.toJson()).toList(),
     };
+  }
+
+  List<LogModel> getLogsForRound(int roundId) {
+    return logs.where((log) => log.roundId == roundId).toList();
+  }
+
+  LogModel? getLogWithHighestScore(int roundId) {
+    List<LogModel> logsForRound = getLogsForRound(roundId);
+    if (logsForRound.isEmpty) {
+      return null;
+    }
+    return logsForRound
+        .reduce((current, next) => current.score > next.score ? current : next);
   }
 }

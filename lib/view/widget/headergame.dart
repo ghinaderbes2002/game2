@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 
-class headergame extends StatelessWidget {
+class GameHeader extends StatelessWidget {
   final String text;
   final String text2;
   final String text3;
   final IconButton? iconButton;
   final IconData? icons;
   final void Function()? onTap;
-  const headergame({
-    Key? key,
+
+  const GameHeader({
+    super.key,
     required this.text,
     required this.text2,
     required this.text3,
     this.iconButton,
     this.icons,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
